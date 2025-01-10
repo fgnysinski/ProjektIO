@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statystyki</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <nav class ="navbar">
+        <ul class="menu">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="/list">Lista samochodów</a></li>
+            <li><a href="/stats">Statystyki</a></li>
+            <li><a href="/charts">Wykresy</a></li>
+            <li><a href="/map">Mapa</a></li>
+        </ul>
+    </nav>
+    <h1>Statystyki</h1>
+
+    <form method="POST">
+        <label for="nazwa">Nazwa:</label>
+        <input type="text" id="nazwa" name="nazwa">
+
+        <label for="rok">Rok:</label>
+        <input type="text" id="rok" name="rok">
+
+        <label for="miasto">Miasto:</label>
+        <input type="text" id="miasto" name="miasto">
+
+        <label for="wojewodztwo">Województwo:</label>
+        <input type="text" id="wojewodztwo" name="wojewodztwo">
+
+        <label for="paliwo">Rodzaj paliwa:</label>
+        <input type="text" id="paliwo" name="paliwo">
+
+        <button type="submit">Zastosuj filtry</button>
+        <button type="button" onclick="window.location.href = '/stats';">Reset</button>
+    </form>
+
+    {% if avg_price is not none %}
+        <div class="stat-card">
+            <h2>Średnia cena: {{ avg_price }} zł</h2>
+            <h2>Średni przebieg: {{ avg_mileage }} km</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Liczba samochodów według rocznika:</h3>
+            <ul>
+                {% for year, count in year_count.items() %}
+                    <li>{{ year }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="stat-card">
+            <h3>Liczba samochodów według województwa:</h3>
+            <ul>
+                {% for province, count in province_count.items() %}
+                    <li>{{ province }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="stat-card">
+            <h3>Liczba samochodów według paliwa:</h3>
+            <ul>
+                {% for fuel, count in fuel_count.items() %}
+                    <li>{{ fuel }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+</body>
+</html>

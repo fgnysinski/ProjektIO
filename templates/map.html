@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class ="navbar">
+        <ul class="menu">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="/list">Lista samochodów</a></li>
+            <li><a href="/stats">Statystyki</a></li>
+            <li><a href="/charts">Wykresy</a></li>
+            <li><a href="/map">Mapa</a></li>
+        </ul>
+    </nav>
+    <h1>Mapa samochodów w Polsce</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([51.9194, 19.1451], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var wojewodztwa_data = {{ wojewodztwa_data | tojson }};
+
+        var wojewodztwa_coords = {
+            "Dolnoslaskie": [51.1079, 17.0385],
+            "Kujawsko-pomorskie": [53.1, 18.1],
+            "Lubelskie": [51.0, 22.0],
+            "Lubuskie": [52.0, 15.5],
+            "Lodzkie": [51.8, 19.5],
+            "Malopolskie": [50.0611, 19.9383],
+            "Mazowieckie": [52.2298, 21.0118],
+            "Opolskie": [50.6, 17.9],
+            "Podkarpackie": [49.9, 22.0],
+            "Podlaskie": [53.0, 23.0],
+            "Pomorskie": [54.5, 18.0],
+            "Slaskie": [50.2, 19.0],
+            "Swietokrzyskie": [50.9, 20.6],
+            "Warminsko-mazurskie": [53.8, 20.5],
+            "Wielkopolskie": [52.4, 16.9],
+            "Zachodniopomorskie": [53.4, 14.5]
+        };
+
+        for (var wojewodztwo in wojewodztwa_data) {
+            if (wojewodztwa_coords[wojewodztwo]) {
+                var count = wojewodztwa_data[wojewodztwo];
+                L.marker(wojewodztwa_coords[wojewodztwo], {
+                    icon: L.divIcon({
+                        className: 'car-count',
+                        html: count
+                    })
+                }).addTo(map);
+            }
+        }
+    </script>
+</body>
+</html>

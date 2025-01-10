@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-choropleth@1.0.0/dist/choropleth.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wykresy</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <nav class ="navbar">
+        <ul class="menu">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="/list">Lista samochodów</a></li>
+            <li><a href="/stats">Statystyki</a></li>
+            <li><a href="/charts">Wykresy</a></li>
+            <li><a href="/map">Mapa</a></li>
+        </ul>
+    </nav>
+    <h1>Wykresy</h1>
+    <form method="POST">
+        <label for="brand">Marka:</label>
+        <input type="text" id="brand" name="brand" value="{{ selected_brand }}">
+
+        <label for="city">Miasto:</label>
+        <input type="text" id="city" name="city" value="{{ selected_city }}">
+
+        <label for="province">Województwo:</label>
+        <input type="text" id="province" name="province" value="{{ selected_province }}">
+
+        <button type="submit">Filtruj</button>
+        <button type="button" onclick="window.location.href = '/charts';">Reset</button>
+    </form>
+
+    <div class="chart-container">
+        <div>
+            <h2>Liczba aut w danym roczniku</h2>
+            <canvas id="carsByYearChart"></canvas>
+        </div>
+
+        <div>
+            <h2>Średnia cena aut w zależności od rocznika</h2>
+            <canvas id="priceByYearChart"></canvas>
+        </div>
+
+        <div>
+            <h2>Średnia cena dla każdej marki</h2>
+            <canvas id="avgPriceChart"></canvas>
+        </div>
+
+        <div>
+            <h2>Średni przebieg dla każdej marki</h2>
+            <canvas id="avgMileageChart"></canvas>
+        </div>
+
+        <div>
+            <h2>Liczba aut z danym paliwem</h2>
+            <canvas id="fuelChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const chartData = {{ chart_data | safe }};
+
+        new Chart(document.getElementById('avgPriceChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(chartData.avg_price),
+                datasets: [{
+                    label: 'Średnia cena (zł)',
+                    data: Object.values(chartData.avg_price),
+                    backgroundColor: '#FF6384'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('avgMileageChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(chartData.avg_mileage),
+                datasets: [{
+                    label: 'Średni przebieg (km)',
+                    data: Object.values(chartData.avg_mileage),
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('carsByYearChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(chartData.cars_by_year),
+                datasets: [{
+                    label: 'Liczba samochodów',
+                    data: Object.values(chartData.cars_by_year),
+                    borderColor: '#4BC0C0',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('priceByYearChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(chartData.avg_price_by_year),
+                datasets: [{
+                    label: 'Średnia cena (zł)',
+                    data: Object.values(chartData.avg_price_by_year),
+                    borderColor: '#FF5733',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('fuelChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(chartData.fuel_counts),
+                datasets: [{
+                    label: 'Rodzaje paliwa',
+                    data: Object.values(chartData.fuel_counts),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+</body>
+</html>

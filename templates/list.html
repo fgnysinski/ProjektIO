@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista samochodów</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <nav class ="navbar">
+        <ul class="menu">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="/list">Lista samochodów</a></li>
+            <li><a href="/stats">Statystyki</a></li>
+            <li><a href="/charts">Wykresy</a></li>
+            <li><a href="/map">Mapa</a></li>
+        </ul>
+    </nav>
+    <h1>Lista samochodów</h1>
+<form method="POST">
+    <label for="nazwa">Nazwa:</label>
+    <input type="text" id="nazwa" name="nazwa" value="{{ request.form.get('nazwa', '') }}">
+    <br>
+
+    <label for="rok">Rok:</label>
+    <input type="text" id="rok" name="rok" value="{{ request.form.get('rok', '') }}">
+    <br>
+
+    <label for="miasto">Miasto:</label>
+    <input type="text" id="miasto" name="miasto" value="{{ request.form.get('miasto', '') }}">
+    <br>
+
+    <label for="wojewodztwo">Województwo:</label>
+    <input type="text" id="wojewodztwo" name="wojewodztwo" value="{{ request.form.get('wojewodztwo', '') }}">
+    <br>
+
+    <label for="paliwo">Rodzaj paliwa:</label>
+    <input type="text" id="paliwo" name="paliwo" value="{{ request.form.get('paliwo', '') }}">
+    <br>
+
+    <label for="cena_od">Cena od:</label>
+    <input type="text" id="cena_od" name="cena_od" value="{{ request.form.get('cena_od', '') }}">
+
+    <label for="cena_do">Cena do:</label>
+    <input type="text" id="cena_do" name="cena_do" value="{{ request.form.get('cena_do', '') }}">
+    <br>
+
+    <label for="przebieg_od">Przebieg od:</label>
+    <input type="text" id="przebieg_od" name="przebieg_od" value="{{ request.form.get('przebieg_od', '') }}">
+
+    <label for="przebieg_do">Przebieg do:</label>
+    <input type="text" id="przebieg_do" name="przebieg_do" value="{{ request.form.get('przebieg_do', '') }}">
+    <br>
+
+    <button type="submit">Filtruj</button>
+    <button type="button" onclick="window.location.href = '/list';">Reset</button>
+</form>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>NAZWA</th>
+                <th>CENA</th>
+                <th>PRZEBIEG</th>
+                <th>ROK</th>
+                <th>MIASTO</th>
+                <th>WOJEWÓDZTWO</th>
+                <th>PALIWO</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+            <tr>
+                <td>{{ car['NAZWA'] }}</td>
+                <td>{{ car['CENA'] }}</td>
+                <td>{{ car['PRZEBIEG'] }}</td>
+                <td>{{ car['ROK'] }}</td>
+                <td>{{ car['MIASTO'] }}</td>
+                <td>{{ car['WOJEWODZTWO'] }}</td>
+                <td>{{ car['PALIWO'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
